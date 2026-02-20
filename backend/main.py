@@ -23,7 +23,7 @@ IMAGE_SIZE = 128
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 CONFIDENCE_THRESHOLD = 0.60
-MODEL_PATH = os.getenv("MODEL_PATH", "model/brain_tumor_model.h5")
+MODEL_PATH = os.getenv("MODEL_PATH", "model/brain_tumor_model.keras")
 CLASS_NAMES_PATH = os.getenv("CLASS_NAMES_PATH", "model/class_names.json")
 
 logging.basicConfig(level=logging.INFO)
