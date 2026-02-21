@@ -37,20 +37,16 @@ class_names: list[str] = []
 
 
 @asynccontextmanager
+@asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Load model and class names once at startup."""
-    global model, class_names
+    global class_names
 
     logger.info("Loading class names from %s", CLASS_NAMES_PATH)
     with open(CLASS_NAMES_PATH, "r") as f:
         class_names = json.load(f)
-    logger.info("Class names: %s", class_names)
 
-    logger.info("Loading model from %s", MODEL_PATH)
-    model = tf.keras.models.load_model(MODEL_PATH)
-    logger.info("Model loaded successfully.")
-
-    yield  # app is running
+    logger.info("Startup complete.")
+    yield # app is running
 
     logger.info("Shutting down.")
 
@@ -119,6 +115,12 @@ async def health():
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
+    global model
+
+    if model is None:
+        logger.info("Loading model lazily...")
+        model = tf.keras.models.load_model(MODEL_PATH)
+
     # Validate file type
     validate_file(file)
 
